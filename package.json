@@ -18,7 +18,7 @@
   "homepage": "https://github.com/eden-js/locale#readme",
   "dependencies": {
     "deepmerge": "^3.0.0",
-    "globby": "^8.0.1",
+    "globby": "^9.0.0",
     "i18next": "^13.0.0",
     "i18next-browser-languagedetector": "^2.2.3",
     "i18next-chained-backend": "^0.1.2",
