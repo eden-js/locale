@@ -4,7 +4,7 @@
   "version": "2.1.0",
   "dependencies": {
     "@edenjs/glob": "^1.0.0",
-    "deepmerge": "^3.1.0",
+    "deepmerge": "^4.0.0",
     "i18next": "^15.0.0",
     "i18next-browser-languagedetector": "^3.0.0",
     "i18next-chained-backend": "^1.0.0",
