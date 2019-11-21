@@ -90,7 +90,7 @@ class LocalesTask {
     }
 
     // Set locale folder
-    const frontend = path.join(data.appRoot, 'data', 'www', 'locales');
+    const frontend = path.join(data.appRoot, 'www', 'locales');
 
     // Remove cache
     await fs.remove(frontend);

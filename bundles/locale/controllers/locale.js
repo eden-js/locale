@@ -60,7 +60,7 @@ class LocaleController extends Controller {
       try {
         // Require locales
         // eslint-disable-next-line global-require, import/no-dynamic-require
-        res.json(require(`${global.appRoot}/data/cache/locales/${req.params.ns}.${req.params.lng}.json`));
+        res.json(require(`${global.appRoot}/www/locales/${req.params.ns}.${req.params.lng}.json`));
       } catch (e) {
         // Return nothing
         res.json({});
