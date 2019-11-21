@@ -1,9 +1,3 @@
-// Require dependencies
-const fs        = require('fs-extra');
-const glob      = require('@edenjs/glob');
-const path      = require('path');
-const deepMerge = require('deepmerge');
-
 // Require local dependencies
 const config = require('config');
 
@@ -28,25 +22,50 @@ class LocalesTask {
   }
 
   /**
+   * run in background
+   *
+   * @param {*} files
+   */
+  async run(files) {
+    // run models in background
+    await this._runner.thread(this.thread, {
+      files,
+
+      parser    : require.resolve('lib/utilities/parser'),
+      appRoot   : global.appRoot,
+      namespace : config.get('i18n.defaultNS') || 'default',
+    });
+
+    // Restart server
+    this._runner.restart();
+  }
+
+  /**
    * Run assets task
    *
    * @param {Array} files
    *
    * @return {Promise}
    */
-  async run(files) {
+  async thread(data) {
+    // Require dependencies
+    const fs        = require('fs-extra');
+    const glob      = require('@edenjs/glob');
+    const path      = require('path');
+    const deepMerge = require('deepmerge');
+
     // Set locales and namespaces
     const locales     = {};
     const localeTypes = [];
     const namespaces  = [];
 
     // Loop absolute files
-    for (const absoluteFile of await glob(files)) {
+    for (const absoluteFile of await glob(data.files)) {
       // Set locale
       let locale = path.basename(absoluteFile).replace('.json', '');
 
       // Set namespace
-      let namespace = config.get('i18n.defaultNS') || 'default';
+      let namespace = data.namespace;
 
       // Check locale
       if (locale.split('.').length > 1) {
@@ -71,7 +90,7 @@ class LocalesTask {
     }
 
     // Set locale folder
-    const frontend = path.join(global.appRoot, 'data', 'www', 'locales');
+    const frontend = path.join(data.appRoot, 'data', 'www', 'locales');
 
     // Remove cache
     await fs.remove(frontend);
@@ -98,13 +117,10 @@ class LocalesTask {
     }
 
     // Get namespaces and Locales
-    await this._runner.write('locale', {
+    fs.writeJson(`${data.appRoot}/.edenjs/.cache/locale.json`, {
       locales    : localeTypes,
       namespaces,
     });
-
-    // Restart server
-    this._runner.restart();
   }
 
   /**
