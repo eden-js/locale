@@ -11,7 +11,7 @@ const backend  = require('i18next-chained-backend');
 const sprintf  = require('i18next-sprintf-postprocessor');
 const detector = require('i18next-browser-languagedetector');
 
-const store  = require('default/public/js/store');
+const store  = require('core/public/js/store');
 const socket = require('socket/public/js/bootstrap');
 
 /**
