@@ -1,15 +1,13 @@
 
 // Require dependencies
-const path       = require('path');
-const deepMerge  = require('deepmerge');
-const Helper     = require('helper');
-const backend    = require('i18next-node-fs-backend');
-const i18next    = require('i18next');
-const sprintf    = require('i18next-sprintf-postprocessor');
-const middleware = require('i18next-express-middleware');
-
-// Require local dependencies
-const config = require('config');
+import path       from 'path';
+import config     from 'config';
+import Helper     from 'helper';
+import backend    from 'i18next-node-fs-backend/lib/index';
+import i18next    from 'i18next';
+import sprintf    from 'i18next-sprintf-postprocessor/dist/es/index';
+import deepMerge  from 'deepmerge';
+import middleware from 'i18next-express-middleware';
 
 // Require compiled conf
 const compiled = cache('locale');
@@ -93,4 +91,4 @@ class LocaleHelper extends Helper {
  *
  * @type {locale}
  */
-module.exports = new LocaleHelper();
+export default new LocaleHelper();

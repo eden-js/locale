@@ -9,7 +9,7 @@ const Events   = require('events');
 const localBE  = require('i18next-localstorage-backend');
 const backend  = require('i18next-chained-backend');
 const sprintf  = require('i18next-sprintf-postprocessor');
-const detector = require('i18next-browser-languagedetector');
+const detector = require('i18next-browser-languagedetector/dist/cjs/i18nextBrowserLanguageDetector');
 
 const store  = require('core/public/js/store');
 const socket = require('socket/public/js/bootstrap');
