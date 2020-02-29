@@ -1,9 +1,9 @@
 
 // Require dependencies
-const config     = require('config');
-const deepMerge  = require('deepmerge');
-const Controller = require('controller');
-const middleware = require('i18next-express-middleware');
+import config     from 'config';
+import deepMerge  from 'deepmerge';
+import Controller from 'controller';
+import middleware from 'i18next-express-middleware';
 
 // Require helpers
 const locale = helper('locale');
@@ -13,7 +13,7 @@ const locale = helper('locale');
  *
  * @priority 100
  */
-class LocaleController extends Controller {
+export default class LocaleController extends Controller {
   /**
    * Construct locale controller class
    */
@@ -201,10 +201,3 @@ class LocaleController extends Controller {
     return next();
   }
 }
-
-/**
- * Export LocaleController controller class
- *
- * @type {LocaleController}
- */
-module.exports = LocaleController;
