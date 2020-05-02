@@ -21,16 +21,18 @@ export default class LocaleController extends Controller {
     // Run super
     super();
 
+    // sessions
     this.sessions = {};
 
     // Bind methods
     this.build = this.build.bind(this);
 
     // Bind private methods
-    this._create = this._create.bind(this);
-    this._remove = this._remove.bind(this);
-    this._socket = this._socket.bind(this);
-    this._middleware = this._middleware.bind(this);
+    this.renderHook = this.renderHook.bind(this);
+    this.socketHook = this.socketHook.bind(this);
+
+    // actions
+    this.middlewareAction = this.middlewareAction.bind(this);
 
     // Build
     this.building = this.build();
@@ -41,18 +43,23 @@ export default class LocaleController extends Controller {
    */
   build() {
     // Run this
-    this.eden.pre('view.render', this._create);
-    this.eden.post('view.render', this._remove);
+    this.eden.pre('view.render', this.renderHook);
+    this.eden.pre('view.compile', ({ render }) => {
+      // remove stupid methods
+      delete render.state.t;
+      delete render.state.i18n;
+      delete render.state.exists;
+    });
 
     // Hooks
-    this.eden.pre('socket.call.opts', this._socket);
-    this.eden.pre('socket.endpoint.opts', this._socket);
+    this.eden.pre('socket.call.opts', this.socketHook);
+    this.eden.pre('socket.endpoint.opts', this.socketHook);
 
     // Use middleware
     this.eden.router.use(middleware.handle(locale.locale));
 
     // Add middleware
-    this.eden.router.use(this._middleware);
+    this.eden.router.use(this.middlewareAction);
 
     // Use get
     this.eden.router.get('/locales/:ns.:lng.json', (req, res) => {
@@ -89,10 +96,7 @@ export default class LocaleController extends Controller {
    *
    * @param {Object} obj
    */
-  _create(obj) {
-    // Let render
-    const { req, render } = obj;
-
+  renderHook({ req, res, render }) {
     // Set language
     req.language = req.language || config.get('i18n.fallbackLng');
 
@@ -115,9 +119,6 @@ export default class LocaleController extends Controller {
       }, config.get('i18n') || {});
     }
 
-    // Set helpers
-    if (!render.helpers) render.helpers = {};
-
     // Set helper
     render.helpers.i18n = {
       // Return helper translate function
@@ -139,7 +140,7 @@ export default class LocaleController extends Controller {
    *
    * @param  {Object} opts
    */
-  _socket(opts) {
+  socketHook(opts) {
     // Add opts
     opts.t = (str, data) => { // eslint-disable-line no-param-reassign
       // Check opts
@@ -160,16 +161,6 @@ export default class LocaleController extends Controller {
   }
 
   /**
-   * Remove helper functions
-   *
-   * @param {Object} obj
-   */
-  _remove(obj) {
-    // Remove helpers
-    if (obj.render.helpers) delete obj.render.helpers;
-  }
-
-  /**
    * Add language middleware
    *
    * @param {Request}  req
@@ -178,7 +169,7 @@ export default class LocaleController extends Controller {
    *
    * @return {*}
    */
-  async _middleware(req, res, next) {
+  async middlewareAction(req, res, next) {
     // Set user language
     if (!req.user) return next();
 
