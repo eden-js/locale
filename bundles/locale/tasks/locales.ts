@@ -1,20 +1,20 @@
-// Require local dependencies
-const config = require('config');
+// import json5
+import JSON5 from 'json5';
 
 /**
  * Build locale task class
  *
  * @task locales
  */
-class LocalesTask {
+export default class LocalesTask {
   /**
    * Construct locale task class
    *
    * @param {Loader} runner
    */
-  constructor(runner) {
+  constructor(cli) {
     // Set private variables
-    this._runner = runner;
+    this.cli = cli;
 
     // Bind methods
     this.run = this.run.bind(this);
@@ -28,16 +28,22 @@ class LocalesTask {
    */
   async run(files) {
     // run models in background
-    await this._runner.thread(this.thread, {
+    const data = await this.cli.thread(this.thread, {
       files,
 
-      parser    : require.resolve('lib/utilities/parser'),
+      parser    : require.resolve(`${global.edenRoot}/lib/parser`),
       appRoot   : global.appRoot,
-      namespace : config.get('i18n.defaultNS') || 'default',
+      namespace : this.cli.get('config.i18n.defaultNS') || 'default',
     });
 
+    // index
+    this.cli.write('.index/locale.js', `module.exports = ${JSON5.stringify(data)};`);
+
     // Restart server
-    this._runner.restart();
+    this.cli.emit('restart');
+
+    // locales
+    return `loaded ${data.locales.length} locales!`;
   }
 
   /**
@@ -116,11 +122,11 @@ class LocalesTask {
       }
     }
 
-    // Get namespaces and Locales
-    fs.writeJson(`${data.appRoot}/.edenjs/.cache/locale.json`, {
-      locales    : localeTypes,
+    // count
+    return {
+      locales : localeTypes,
       namespaces,
-    });
+    };
   }
 
   /**
@@ -130,15 +136,6 @@ class LocalesTask {
    */
   watch() {
     // Return files
-    return [
-      'locales/*',
-    ];
+    return '/locales/*.json';
   }
 }
-
-/**
- * Export locales task
- *
- * @type {localesTask}
- */
-module.exports = LocalesTask;
