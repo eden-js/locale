@@ -43,7 +43,7 @@ export default class LocalesTask {
     this.cli.emit('restart');
 
     // locales
-    return `loaded ${data.locales.length} locales!`;
+    return `${data.locales.length} locales loaded!`;
   }
 
   /**
