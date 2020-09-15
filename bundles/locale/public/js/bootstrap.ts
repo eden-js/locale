@@ -74,10 +74,11 @@ class LocaleStore extends EventEmitter {
     load.backend.backends = [localBE, xhrBE];
 
     // Use functions
-    this.i18n
-      .use(detector)
-      .use(backend)
-      .use(sprintf);
+    [detector, backend, sprintf].forEach((using, i) => {
+      try {
+        this.i18n.use(using);
+      } catch (e) { console.log(`${i} i18n failed`) }
+    });
 
     // Init
     this.i18n.init(load);
