@@ -1,23 +1,22 @@
 
+// Require dependencies
+import i18n from 'i18next';
+import store from 'core/public/js/store';
+import xhrBE from 'i18next-xhr-backend';
+import socket from 'socket/public/js/bootstrap';
+import localBE from 'i18next-localstorage-backend';
+import backend from 'i18next-chained-backend';
+import sprintf from 'i18next-sprintf-postprocessor';
+import detector from 'i18next-browser-languagedetector';
+import { EventEmitter} from 'events';
+
 // Create built
 let built = null;
-
-// Require dependencies
-const i18n     = require('i18next');
-const xhrBE    = require('i18next-xhr-backend');
-const Events   = require('events');
-const localBE  = require('i18next-localstorage-backend');
-const backend  = require('i18next-chained-backend');
-const sprintf  = require('i18next-sprintf-postprocessor');
-const detector = require('i18next-browser-languagedetector/dist/cjs/i18nextBrowserLanguageDetector');
-
-const store  = require('core/public/js/store');
-const socket = require('socket/public/js/bootstrap');
 
 /**
  * Create locale store
  */
-class LocaleStore extends Events {
+class LocaleStore extends EventEmitter {
   /**
    * Construct locale store
    */
@@ -157,13 +156,13 @@ class LocaleStore extends Events {
 built = new LocaleStore();
 
 /**
+ * Add locale to window.eden
+ */
+window.eden.i18n = built;
+
+/**
  * Export locale store class
  *
  * @type {LocaleStore}
  */
-module.exports = built;
-
-/**
- * Add locale to window.eden
- */
-window.eden.i18n = built;
+export default built;
