@@ -6,7 +6,6 @@ import xhrBE from 'i18next-xhr-backend';
 import socket from 'socket/public/js/bootstrap';
 import localBE from 'i18next-localstorage-backend';
 import backend from 'i18next-chained-backend';
-import sprintf from 'i18next-sprintf-postprocessor';
 import detector from 'i18next-browser-languagedetector';
 import { EventEmitter} from 'events';
 
@@ -74,7 +73,7 @@ class LocaleStore extends EventEmitter {
     load.backend.backends = [localBE, xhrBE];
 
     // Use functions
-    [detector, backend, sprintf].forEach((using, i) => {
+    [detector, backend].forEach((using, i) => {
       try {
         this.i18n.use(using);
       } catch (e) { console.log(`${i} i18n failed`) }
