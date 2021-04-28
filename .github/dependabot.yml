@@ -1,0 +1,35 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "17:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: eslint
+    versions:
+    - 7.18.0
+    - 7.19.0
+    - 7.20.0
+    - 7.21.0
+    - 7.22.0
+    - 7.23.0
+    - 7.24.0
+  - dependency-name: i18next
+    versions:
+    - 19.8.5
+    - 19.8.7
+    - 19.8.8
+    - 19.8.9
+    - 19.9.0
+    - 19.9.1
+    - 19.9.2
+    - 20.0.0
+    - 20.1.0
+    - 20.2.1
+  - dependency-name: eslint-plugin-react
+    versions:
+    - 7.22.0
+    - 7.23.0
+    - 7.23.1
